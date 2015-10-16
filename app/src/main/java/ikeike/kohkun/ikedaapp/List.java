@@ -1,130 +1,62 @@
 package ikeike.kohkun.ikedaapp;
 
-import android.location.Location;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 
 public class List extends FragmentActivity
-        implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener,
-        GoogleMap.OnMyLocationButtonClickListener,
-        OnMapReadyCallback {
+        implements SimpleCursorAdapter.ViewBinder {
 
-    private GoogleApiClient mGoogleApiClient;
-    private TextView mMessageView;
-
-    // These settings are the same as the settings for the map. They will in fact give you updates
-    // at the maximal rates currently possible.
-    private static final LocationRequest REQUEST = LocationRequest.create()
-            .setInterval(5000)         // 5 seconds
-            .setFastestInterval(16)    // 16ms = 60fps
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            private ListView mListSongs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        mMessageView = (TextView) findViewById(R.id.message_text);
+        mListSongs = (ListView) findViewById(R.id.listSongs);
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        loadSongs();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mGoogleApiClient.connect();
-    }
+            private void loadSongs() {
+                Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        null, null, null, null);
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mGoogleApiClient.disconnect();
-    }
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        map.setMyLocationEnabled(true);
-        map.setOnMyLocationButtonClickListener(this);
-    }
+                SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+                        R.layout.activity_list_list, cursor, new String[] { MediaStore.Audio.Media.TITLE,
+                        MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION }, new int[] {
+                        R.id.textTitle, R.id.textArtist, R.id.textTime }, 0);//曲名、アーティスト、タイトル
 
-    /**
-     * Button to get current Location. This demonstrates how to get the current Location as required
-     * without needing to register a LocationListener.
-     */
-    public void showMyLocation(View view) {
-        if (mGoogleApiClient.isConnected()) {
-            String msg = "Location = "
-                    + LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        }
-    }
+                adapter.setViewBinder(this);
 
-    /**
-     * Implementation of {@link LocationListener}.
-     */
-    @Override
-    public void onLocationChanged(Location location) {
-        mMessageView.setText("Location = " + location);
-    }
+                mListSongs.setAdapter(adapter);
+            }
 
-    /**
-     * Callback called when connected to GCore. Implementation of {@link ConnectionCallbacks}.
-     */
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient,
-                REQUEST,
-                this);  // LocationListener
-    }
+            @Override
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                int index = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
+                if (index == columnIndex) {
+                    TextView textTime = (TextView) view;
+                    long durationMs = cursor.getLong(columnIndex);
+                    long duration = durationMs / 1000;
+                    long h = duration / 3600;
+                    long m = (duration - h * 3600) / 60;
+                    long s = duration - (h * 3600 + m * 60);
+                    textTime.setText(String.format("%02d:%02d", m, s));
+                    return true;
+                }
+                return false;
+            }
 
-    /**
-     * Callback called when disconnected from GCore. Implementation of {@link ConnectionCallbacks}.
-     */
-    @Override
-    public void onConnectionSuspended(int cause) {
-        // Do nothing
-    }
 
-    /**
-     * Implementation of {@link OnConnectionFailedListener}.
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // Do nothing
-    }
 
-    @Override
-    public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
-        return false;
-    }
+
 }
 
 

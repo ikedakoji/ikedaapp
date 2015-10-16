@@ -33,18 +33,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-
-
-
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         setResult(Activity.RESULT_CANCELED);
-
         //インテントからのぱらーめた取得
         Intent intent = this.getIntent();
         String searchword= intent.getStringExtra("searchword");
@@ -53,27 +46,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // if(extras != null)searchword.getString("searchword")
         final String srachtext = editText.getText().toString();
         Toast.makeText(this, srachtext, Toast.LENGTH_LONG);
-
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-
                 //エンターキーが押されたか判定
                 if(event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
-
                     //ソフトキーボードを閉じる
                     InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),0);
-
                     //検索処理的な何か
 // 検索ワードが空っぽなら警告
                     if (TextUtils.isEmpty(srachtext)) {
                         Toast.makeText(MapsActivity.this,
                                 getString(R.string.Noword),
                                 Toast.LENGTH_SHORT).show();
-
                     }
-
                     try {
                         // geo:0,0で初期の位置を現在地とし、新しい場所を検索
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri
