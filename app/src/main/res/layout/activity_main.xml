@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/intputSearchWord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+    android:hint="場所の入力" />
+
+    <Button
+        android:id="@+id/linkMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="マップ呼び出すよ" />
+
+</LinearLayout>

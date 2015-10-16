@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- japanesecolor. -->
+    <color name="colorHisui">#38b48b</color>
+    <color name="colorAzuki">#96514d</color>
+    <color name="colorKogane">#e6b422</color>
+    <color name="colorHonmurasaki">#65318e</color>
+    <color name="colorBenimurasaki">#b44c97</color>
+    <color name="colorKaracha">#8d6449</color>
+    <color name="colorShuiro">#eb6101</color>
+    <color name="colorShikoku">#2e2930</color>
+
+</resources>
