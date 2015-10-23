@@ -10,4 +10,9 @@
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_large">10dp</dimen>
     <dimen name="padding_xlarge">16dp</dimen>
+
+    <dimen name="imageview_logo">48dp</dimen>
+    <dimen name="textsize_small">14sp</dimen>
+    <dimen name="textsize_medium">18sp</dimen>
+    <dimen name="textsize_large">22sp</dimen>
 </resources>
