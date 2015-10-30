@@ -6,38 +6,38 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button btn =(Button)findViewById(R.id.RssReader);
+        Button btn2=(Button)findViewById(R.id.linkYoutube);
 
-        findViewById(R.id.Map).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 検索するワードをを取得
-                EditText etSearchWord = (EditText) findViewById(R.id.intputSearchWord);
-                String searchWord = etSearchWord.getText().toString();
+       btn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               try {
+                   Intent intent = new Intent(v.getContext(), RssReader.class);
+                   //intent.putExtra("searchWord", searchWord.toString());
+                   startActivity(intent);
+               } catch (ActivityNotFoundException e) {
+                   Toast.makeText(MainActivity.this,
+                           getString(R.string.activate_higher_level),
+                           Toast.LENGTH_SHORT).show();
+               }
+           }
+       });
 
-
-                try {
-                    // geo:0,0で初期の位置を現在地とし、新しい場所を検索
-                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                    intent.putExtra("searchWord", searchWord.toString());
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(MainActivity.this,
-                            getString(R.string.activate_higher_level),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        findViewById(R.id.linkYoutube).setOnClickListener(
+        btn2.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
